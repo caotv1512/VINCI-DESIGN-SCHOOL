@@ -1,0 +1,141 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(content='width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no', name='viewport')
+  title= title ? title : "Vince Design School"
+  // General CSS Files
+  link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
+  link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.7.2/css/all.css', integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr', crossorigin='anonymous')
+  // CSS Libraries
+  // Template CSS
+  link(rel='stylesheet', href='/admin/css/style.css')
+  link(rel='stylesheet', href='/admin/css/components.css')
+  link(rel="shortcut icon", href="/image/favicon.ico", type="image/x-icon")
+body
+  #app
+    .main-wrapper
+      .navbar-bg
+      nav.navbar.navbar-expand-lg.main-navbar
+        form.form-inline.mr-auto
+          ul.navbar-nav.mr-3
+            li
+              a.nav-link.nav-link-lg(href='#', data-toggle='sidebar')
+                i.fas.fa-bars
+            li
+              a.nav-link.nav-link-lg.d-sm-none(href='#', data-toggle='search')
+                i.fas.fa-search
+          .search-element
+            input.form-control(type='search', placeholder='Search', aria-label='Search', data-width='250')
+            button.btn(type='submit')
+              i.fas.fa-search
+            .search-backdrop
+            .search-result
+              .search-header Histories
+              .search-item
+                a(href='#') How to hack NASA using CSS
+                a.search-close(href='#')
+                  i.fas.fa-times
+              .search-item
+                a(href='#') Kodinger.com
+                a.search-close(href='#')
+                  i.fas.fa-times
+              .search-item
+                a(href='#') #Stisla
+                a.search-close(href='#')
+                  i.fas.fa-times
+        ul.navbar-nav.navbar-right
+          li.dropdown.dropdown-list-toggle
+            a.nav-link.notification-toggle.nav-link-lg.beep(href='#', data-toggle='dropdown')
+              i.far.fa-bell
+            .dropdown-menu.dropdown-list.dropdown-menu-right
+              .dropdown-header.text-center Notifications
+              .dropdown-list-content.dropdown-list-icons
+                if user.notifications.length > 0
+                  - for (var i = user.notifications.length - 1; i >= 0; i--) {
+                    - let a = user.notifications[i];
+                      a.dropdown-item.dropdown-item-unread(href='#')
+                        if a.isSuccess
+                          .dropdown-item-icon.bg-success.text-white
+                            i.fas.fa-check
+                        else 
+                          .dropdown-item-icon.bg-danger.text-white
+                            i.fas.fa-exclamation-triangle
+                        .dropdown-item-desc= a.notification
+                          -
+                            let currentLoadTime = new Date().getTime()
+                            let finalDate
+                            let date = new Date(currentLoadTime - a.createdAt.getTime())
+                            let minutes = parseInt((date / (1000 * 60)) % 60)
+                            let hours = parseInt((date / (1000 * 60 * 60)) % 24)
+                            let days  = parseInt((date / (1000 * 60 * 60 *24)) % 24)
+                            finalDate = days + " day " + hours + " hours " + minutes + " minutes ago";
+                            if (days > 365){
+                              finalDate = "một năm trước"
+                            }
+                          .time.text-primary= finalDate
+                  - }
+              .dropdown-footer.text-center
+                h5 Love You 
+          li.dropdown
+            a.nav-link.dropdown-toggle.nav-link-lg.nav-link-user(href='#', data-toggle='dropdown')
+              img.rounded-circle.mr-1(alt='image', src= user.photo)
+              .d-sm-none.d-lg-inline-block= `Hi, ${user.name}`
+            .dropdown-menu.dropdown-menu-right
+              .dropdown-title Logged in 5 min ago
+              a.dropdown-item.has-icon(href='#') Profile
+                i.far.fa-user
+              a.dropdown-item.has-icon(href='#') Activities
+                i.fas.fa-bolt
+              a.dropdown-item.has-icon(href='#') Settings
+                i.fas.fa-cog
+              .dropdown-divider
+              a.dropdown-item.has-icon.text-danger(href='/auth/signout') Logout 
+                i.fas.fa-sign-out-alt 
+      .main-sidebar
+        aside#sidebar-wrapper
+          .sidebar-brand
+            a(href='/admin/index') Vince Design School
+          .sidebar-brand.sidebar-brand-sm
+            a(href='/admin/index') VCS
+          ul.sidebar-menu
+            li.menu-header Management Menu
+            li.nav-item.dropdown
+              a.nav-link.has-dropdown(href='#', data-toggle='dropdown')
+                i.fas.fa-columns
+                span Course
+              ul.dropdown-menu
+                li
+                  a.nav-link(href='/admin/course/create-course') Post New Course
+            li.nav-item.dropdown
+              a.nav-link.has-dropdown(href='#')
+                i.fas.fa-th
+                span Free Course
+              ul.dropdown-menu
+                li
+                  a.nav-link(href='/admin/free-course') View All Free Course
+                li
+                  a.nav-link(href='bootstrap-badge.html') Post New Free Course
+            li.nav-item.dropdown
+              a.nav-link.has-dropdown(href='/admin/view-orders')
+                i.fas.fa-th
+                span Orders
+              ul.dropdown-menu
+                li
+                  a.nav-link(href='/admin/view-orders') View All Order
+                li
+                  a.nav-link(href='bootstrap-badge.html') Check New Order
+      // Main Content
+      block content
+  // General JS Scripts
+  script(src='https://code.jquery.com/jquery-3.3.1.min.js', integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=', crossorigin='anonymous')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
+  script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js')
+  script(src='../assets/js/stisla.js')
+  // JS Libraies
+  // Template JS File
+  script(src='/admin/js/scripts.js')
+  script(src='/admin/js/custom.js')
+  // Page Specific JS File
+  script(src='/admin/js/loading.js')

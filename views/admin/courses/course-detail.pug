@@ -1,0 +1,131 @@
+extends ../layout
+block content
+  .main-content
+    section.section
+      .section-header
+        h1= course.courseName
+        .section-header-breadcrumb
+          .breadcrumb-item.active
+            a(href='#') Dashboard
+          .breadcrumb-item.active
+            a(href='#') Course
+          .breadcrumb-item= course.courseName
+      .section-body
+        h2.section-title Information
+        p.section-lead Change information about your course on this page.
+        .row.mt-sm-4
+          .col-12.col-md-12.col-lg-5
+            .card.profile-widget
+              .profile-widget-header
+                img.rounded-circle.profile-widget-picture(alt='image', src= course.imageCover)
+                .profile-widget-items
+                  .profile-widget-item
+                    .profile-widget-item-label Bought
+                    .profile-widget-item-value= course.countBought
+                  .profile-widget-item
+                    .profile-widget-item-label Price
+                    .profile-widget-item-value= course.price.toLocaleString("it-it", { style : "currency", currency: "VND"})
+                  .profile-widget-item
+                    .profile-widget-item-label Lecturer
+                    .profile-widget-item-value= course.trainerName
+              .profile-widget-description
+                .profile-widget-name Course / 
+                  .text-muted.d-inline.font-weight-normal
+                    .slash= course.courseName 
+                    div= course.shortDescription
+              div(style='width: 100%; height: auto;')
+                iframe(width='450', height='315', src= course.demoVideoId, frameborder='0', allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture', allowfullscreen='')
+            .card.profile-widget
+              form.needs-validation(action=`/admin/course/${course.slug}/updateVideoImages`, method="post", enctype="multipart/form-data")
+                .card-header
+                  h4 Edit Video/Images
+                .card-body
+                  .row
+                    .form-group.row.align-items-center.col-md-12.col-12
+                      label.form-control-label.col-sm-3.text-md-right IMAGE COVER
+                      .col-sm-6.col-md-9
+                        .custom-file
+                          input#site-logo.custom-file-input(type='file', name='fileUpload', required)
+                          label.custom-file-label Choose File
+                        .form-text.text-muted The Video must have a maximum size of 10 MB
+                    .form-group.row.align-items-center.col-md-12.col-12
+                      label.form-control-label.col-sm-3.text-md-right Image Detail 1
+                      .col-sm-6.col-md-9
+                        .custom-file
+                          input#site-logo.custom-file-input(type='file', name='fileUpload' , required)
+                          label.custom-file-label Choose File
+                        .form-text.text-muted The Video must have a maximum size of 10 MB
+                    .form-group.row.align-items-center.col-md-12.col-12
+                      label.form-control-label.col-sm-3.text-md-right Image Detail 2
+                      .col-sm-6.col-md-9
+                        .custom-file
+                          input#site-logo.custom-file-input(type='file', name='fileUpload', required)
+                          label.custom-file-label Choose File
+                        .form-text.text-muted The Video must have a maximum size of 10 MB
+                    .form-group.row.align-items-center.col-md-12.col-12
+                      label.form-control-label.col-sm-3.text-md-right Video Demo
+                      .col-sm-6.col-md-9
+                        .custom-file
+                          input#site-logo.custom-file-input(type='file', name='fileUpload')
+                          label.custom-file-label Choose File
+                        .form-text.text-muted The Video must have a maximum size of 100 MB
+                .card-footer.text-center
+                  button.btn.btn-primary Save Changes
+          .col-12.col-md-12.col-lg-7(style="margin-top: 100px")
+            .card
+              form.needs-validation(action=`/admin/course/${course.slug}/updateInformation`, method="post")
+                .card-header
+                  h4 Edit Information
+                .card-body
+                  .row
+                    .form-group.col-md-6.col-12
+                      label Name Course
+                      input.form-control(type='text', value= course.courseName, required='', name='courseName')
+                    .form-group.col-md-6.col-12
+                      label Price
+                      input.form-control(type='text', value=course.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }), required='', name='price')
+                  .row
+                    .form-group.col-md-6.col-12
+                      label Lecturer
+                      input.form-control(type='text',name="trainerName" value= course.trainerName, required='')
+                    .form-group.col-md-6.col-12
+                      label(for='site-description') Short Description
+                      textarea#site-description.form-control(name='shortDescription',style='min-height:10rem')= course.shortDescription
+                  .row
+                    .form-group.col-md-6.col-12
+                      label title Detail 1
+                      input.form-control(type='text',name="title1" value= course.detailDescription[0].title, required='')
+                    .form-group.col-md-6.col-12
+                      label(for='site-description') Description Detail 1
+                      textarea#site-description.form-control(name='detailDescription1',style='min-height:10rem;' )= course.detailDescription[0].content
+                  .row
+                    .form-group.col-md-6.col-12
+                      label title Detail 2
+                      input.form-control(type='text',name="title2" value= course.detailDescription[1].title, required='')
+                    .form-group.col-md-6.col-12
+                      label(for='site-description') Description Detail 2
+                      textarea#site-description.form-control(name='detailDescription2',style='min-height:10rem')= course.detailDescription[0].content
+                .card-footer.text-center
+                  button.btn.btn-primary Save Changes
+      .section-body
+        h2.section-title
+          a.btn.btn-primary(href=`/admin/course/${course.slug}/add/section`) Add New Section
+      if course.sectionId.length > 0
+        each section in course.sectionId
+          .section-body
+            h2.section-title= `${section.sectionTitle} `
+              a.btn.btn-primary(href=`/admin/course/${course.slug}/${section.slug}/add/lesson`) Add Lesson
+            p.section-lead= section.sectionDescription
+            .row
+              each lesson in section.lessonId
+                .col-12.col-sm-6.col-md-6.col-lg-3
+                  article.article
+                    .article-header
+                      .article-image(data-background='/admin/img/news/img08.jpg')
+                      .article-title
+                        h2
+                          a(href='#')= lesson.lessonTitle
+                    .article-details
+                      p= lesson.lessonDescription
+                      .article-cta
+                        a.btn.btn-primary(href= `/admin/course/${course.slug}/${section.slug}/${lesson.slug}`) Read More
